@@ -3,7 +3,7 @@
 	"description": "Cropper for Yii 2",
 	"autoload": {
 		"psr-4": {
-			"webvimark\\extensions\\cropper\\": ""
+			"webvimark\\extensions\\Cropper\\": ""
 		}
 	},
 	"require": {
