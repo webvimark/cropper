@@ -89,6 +89,27 @@ function showCoords(c)
         storage.attr('data-y2', c.y2);
 }
 
+var jcropParams = $cropParams;
+jcropParams.onChange = showCoords;
+jcropParams.onSelect = showCoords;
+jcropParams.bgColor = '';
+
+// Attach fancybox to the cropper link
+$('#cropper-link').fancybox({
+	//fitToView: false,
+	helpers: {
+		title: { type: 'inside' },
+		overlay : {closeClick: false}
+	},
+	afterShow : function(){
+		$( '.fancybox-inner' ).find( 'img' ).Jcrop(jcropParams);
+	},
+	afterClose: function(){
+		$.get('$acceptUrl', { 'cropper-deleteTmpImage': 'aga' });
+	}
+});
+
+// When select new image
 $('input[name="$fileInputName"]').on('change', function(event){
 	files = event.target.files;
 
@@ -103,6 +124,7 @@ $('input[name="$fileInputName"]').on('change', function(event){
 		data.append(k, v);
 	});
 
+	$(this).val("");
 
 	$.ajax({
 		url: '$acceptUrl',
@@ -115,26 +137,7 @@ $('input[name="$fileInputName"]').on('change', function(event){
 	}).success(function(response){
 		if ( response.success )
 		{
-			var jcropParams = $cropParams;
-			jcropParams.onChange = showCoords;
-			jcropParams.onSelect = showCoords;
-			jcropParams.bgColor = '';
-
-			$('#cropper-link').attr('href', response.file)
-				.fancybox({
-					//fitToView: false,
-					helpers: {
-						title: { type: 'inside' },
-						overlay : {closeClick: false}
-					},
-					afterShow : function(){
-						$( '.fancybox-inner' ).find( 'img' ).Jcrop(jcropParams);
-					},
-					afterClose: function(){
-						$.get('$acceptUrl', { 'cropper-deleteTmpImage': 'aga' });
-					}
-				})
-				.trigger('click');
+			$('#cropper-link').attr('href', response.file).trigger('click');
 		}
 		else
 		{
